@@ -1,8 +1,23 @@
 package by.siarhei.information.parser.api;
 
-import java.util.List;
+import by.siarhei.information.composite.api.TextComponent;
+
 
 public abstract class AbstractParser {
-    public abstract List<String> parse(String str);
-    
+    private AbstractParser nextParser;
+
+    public abstract void fillComponent(TextComponent textComponent, String text);
+
+    protected boolean hasNext() {
+        return !(this.nextParser == null);
+
+    }
+
+    public void setNextParser(AbstractParser parser) {
+        nextParser = parser;
+    }
+
+    protected AbstractParser getNextParser() {
+       return nextParser;
+    }
 }

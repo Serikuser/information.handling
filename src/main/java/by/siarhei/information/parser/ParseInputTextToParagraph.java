@@ -1,16 +1,26 @@
 package by.siarhei.information.parser;
 
+import by.siarhei.information.composite.api.TextComponent;
+import by.siarhei.information.composite.impl.ComposedParagraph;
 import by.siarhei.information.parser.api.AbstractParser;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class ParseInputTextToParagraph extends AbstractParser {
 
     private static final String REGEX_PARAGRAPH = "[ ]{2,}";
 
-    public List<String> parse(String text) {
+    @Override
+    public void fillComponent(TextComponent textComponent, String text) {
         String[] subLines = text.split(REGEX_PARAGRAPH);
-        return (Arrays.asList(subLines));
+        Arrays.stream(subLines).forEachOrdered(subLine -> {
+            if(!subLine.isBlank()) {
+                TextComponent component = new ComposedParagraph();
+                if (hasNext()) {
+                    getNextParser().fillComponent(component, subLine);
+                }
+                textComponent.addChild(component);
+            }
+        });
     }
 }

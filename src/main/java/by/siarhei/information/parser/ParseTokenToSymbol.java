@@ -1,14 +1,24 @@
 package by.siarhei.information.parser;
 
+import by.siarhei.information.composite.api.TextComponent;
+import by.siarhei.information.composite.impl.TextSymbol;
 import by.siarhei.information.parser.api.AbstractParser;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class ParseTokenToSymbol extends AbstractParser {
-    private static final String REGEX_SYMBOL = "[A-Za-z]";
+    private static final String REGEX_SYMBOL = "";
 
-    public List<String> parse(String sentence) {
-        return Arrays.asList(sentence.split(REGEX_SYMBOL));
+    @Override
+    public void fillComponent(TextComponent textComponent, String text) {
+        String[] symbols = text.split(REGEX_SYMBOL);
+        Arrays.stream(symbols).forEachOrdered(symbol -> {
+            TextSymbol component =  new TextSymbol();
+            component.setSymbol(symbol);
+            if (hasNext()) {
+                getNextParser().fillComponent(component, symbol);
+            }
+            textComponent.addChild(component);
+        });
     }
 }
