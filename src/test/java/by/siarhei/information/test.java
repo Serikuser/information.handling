@@ -54,7 +54,7 @@ public class test {
         composedTextSearchService.findLongestWord(test);
         composedTextSearchService.findSentencesWithLongestWord(test);
         composedTextSortingService.sortComposedText(test, CompareType.BY_SENTENCE_COUNT);
-        composedTextSearchService.removeSentences(test,4);
+        composedTextSearchService.removeSentences(test,10);
         logger.info(test);
     }
 }

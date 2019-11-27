@@ -41,11 +41,4 @@ public class ComposedText implements TextComponent {
     public void removeChild(TextComponent paragraph) {
         paragraphs.remove(paragraph);
     }
-    public void setParagraphs(List<TextComponent> paragraphs) {
-        this.paragraphs = paragraphs;
-    }
-
-    public List<TextComponent> getParagraphs() {
-        return paragraphs;
-    }
 }

@@ -5,6 +5,6 @@ import by.siarhei.information.composite.impl.ComposedText;
 public class ComposedTextSortingService {
 
     public void sortComposedText(ComposedText text, CompareType type) {
-        text.getParagraphs().sort(type.getComparatorByType());
+        text.getChildrenList().sort(type.getComparatorByType());
     }
 }
