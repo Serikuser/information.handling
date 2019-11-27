@@ -52,7 +52,6 @@ public class ComposedTextSearchService {
     }
 
     public void removeSentences(ComposedText text, int count) {
-
         for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
 
             Iterator iterator = paragraph.getChildrenList().iterator();
@@ -81,7 +80,6 @@ public class ComposedTextSearchService {
                 }
             }
         }
-
         return matches;
     }
 }
