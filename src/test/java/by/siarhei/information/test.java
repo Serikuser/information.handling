@@ -48,13 +48,17 @@ public class test {
         sentenceToTokenParser.setNextParser(tokenToSymbolParser);
         ComposedText test = new ComposedText();
         inputTextToParagraphParser.fillComponent(test, reader.readData());
-        BufferedWriter writer = new BufferedWriter(new FileWriter("output/test.txt"));
+      /*  BufferedWriter writer = new BufferedWriter(new FileWriter("output/test.txt"));
         writer.write(test.toString());
         writer.close();
         composedTextSearchService.findLongestWord(test);
         composedTextSearchService.findSentencesWithLongestWord(test);
         composedTextSortingService.sortComposedText(test, CompareType.BY_SENTENCE_COUNT);
         composedTextSearchService.removeSentences(test,10);
+        composedTextSearchService.wordMatchCount(test);*/
         logger.info(test);
+        composedTextSearchService.wordMatchCount(test).entrySet().forEach(entry->{
+            logger.info(entry.getKey() + " " + entry.getValue());
+        });
     }
 }

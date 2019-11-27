@@ -7,14 +7,12 @@ import by.siarhei.information.composite.impl.ComposedToken;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class ComposedTextSearchService {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String REGEX_NON_LETTERS = "[^a-zA-Z ]";
+    private static final String REGEX_NON_LETTERS = "[^a-zA-Z]";
 
     public TextComponent findLongestWord(ComposedText text) {
         TextComponent longestWord = new ComposedToken();
@@ -65,5 +63,25 @@ public class ComposedTextSearchService {
                 }
             }
         }
+    }
+
+    public Map<String, Integer> wordMatchCount(TextComponent text) {
+        Map<String, Integer> matches = new HashMap<>();
+        for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
+            for (TextComponent sentence : paragraph.getUnmodifiedComponentList()) {
+                for (TextComponent token : sentence.getUnmodifiedComponentList()) {
+                    if (!removeNonLetters(token).isBlank()) {
+                        if (matches.containsKey(removeNonLetters(token).toLowerCase())) {
+                            int count = matches.get(removeNonLetters(token).toLowerCase());
+                            matches.put(removeNonLetters(token).toLowerCase(), count + 1);
+                        } else {
+                            matches.put(removeNonLetters(token).toLowerCase(), 1);
+                        }
+                    }
+                }
+            }
+        }
+
+        return matches;
     }
 }
