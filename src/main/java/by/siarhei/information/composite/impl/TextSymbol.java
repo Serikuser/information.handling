@@ -32,6 +32,16 @@ public class TextSymbol implements TextComponent {
     }
 
     @Override
+    public void removeChild(TextComponent component) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public List<TextComponent> getChildrenList() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public int count() {
         return 1;
     }

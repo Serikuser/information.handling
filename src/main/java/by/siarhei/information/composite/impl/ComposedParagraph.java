@@ -10,6 +10,11 @@ public class ComposedParagraph implements TextComponent {
     private List<TextComponent> sentences = new ArrayList<>();
 
     @Override
+    public List<TextComponent> getChildrenList() {
+        return sentences;
+    }
+
+    @Override
     public int count() {
         return 1;
     }
@@ -22,6 +27,11 @@ public class ComposedParagraph implements TextComponent {
     @Override
     public List<TextComponent> getUnmodifiedComponentList() {
         return Collections.unmodifiableList(sentences);
+    }
+
+    @Override
+    public void removeChild(TextComponent sentence) {
+        sentences.remove(sentence);
     }
 
     @Override

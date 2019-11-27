@@ -10,6 +10,11 @@ public class ComposedToken implements TextComponent {
     private List<TextComponent> symbols = new ArrayList<>();
 
     @Override
+    public List<TextComponent> getChildrenList() {
+        return symbols;
+    }
+
+    @Override
     public int count() {
         return 1;
     }
@@ -22,6 +27,11 @@ public class ComposedToken implements TextComponent {
     @Override
     public List<TextComponent> getUnmodifiedComponentList() {
         return Collections.unmodifiableList(symbols);
+    }
+
+    @Override
+    public void removeChild(TextComponent symbol) {
+        symbols.remove(symbol);
     }
 
     @Override

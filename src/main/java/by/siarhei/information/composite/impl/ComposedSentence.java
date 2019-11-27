@@ -10,6 +10,11 @@ public class ComposedSentence implements TextComponent {
     private List<TextComponent> tokens = new ArrayList<>();
 
     @Override
+    public List<TextComponent> getChildrenList() {
+        return tokens;
+    }
+
+    @Override
     public int count() {
         return 1;
     }
@@ -22,6 +27,11 @@ public class ComposedSentence implements TextComponent {
     @Override
     public List<TextComponent> getUnmodifiedComponentList() {
         return Collections.unmodifiableList(tokens);
+    }
+
+    @Override
+    public void removeChild(TextComponent token) {
+        tokens.remove(token);
     }
 
     @Override

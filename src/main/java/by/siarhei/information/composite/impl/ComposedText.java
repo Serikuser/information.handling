@@ -11,6 +11,11 @@ public class ComposedText implements TextComponent {
     private List<TextComponent> paragraphs = new ArrayList<>();
 
     @Override
+    public List<TextComponent> getChildrenList() {
+        return paragraphs;
+    }
+
+    @Override
     public int count() {
         return 0;
     }
@@ -32,6 +37,10 @@ public class ComposedText implements TextComponent {
         return text.toString();
     }
 
+    @Override
+    public void removeChild(TextComponent paragraph) {
+        paragraphs.remove(paragraph);
+    }
     public void setParagraphs(List<TextComponent> paragraphs) {
         this.paragraphs = paragraphs;
     }

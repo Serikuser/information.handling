@@ -7,7 +7,6 @@ import by.siarhei.information.parser.SentenceToTokenParser;
 import by.siarhei.information.parser.TokenToSymbolParser;
 import by.siarhei.information.reader.InputTextReader;
 import by.siarhei.information.service.CompareType;
-import by.siarhei.information.service.ComponentCalculationService;
 import by.siarhei.information.service.ComposedTextSearchService;
 import by.siarhei.information.service.ComposedTextSortingService;
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +27,7 @@ public class test {
     private SentenceToTokenParser sentenceToTokenParser;
     private TokenToSymbolParser tokenToSymbolParser;
     private ComposedTextSortingService composedTextSortingService;
+    private ComposedTextSearchService composedTextSearchService;
 
     @BeforeClass
     public void setUp() {
@@ -37,6 +37,7 @@ public class test {
         sentenceToTokenParser = new SentenceToTokenParser();
         tokenToSymbolParser = new TokenToSymbolParser();
         composedTextSortingService = new ComposedTextSortingService();
+        composedTextSearchService = new ComposedTextSearchService();
 
     }
 
@@ -50,9 +51,10 @@ public class test {
         BufferedWriter writer = new BufferedWriter(new FileWriter("output/test.txt"));
         writer.write(test.toString());
         writer.close();
-        ComposedTextSearchService.findLongestWord(test);
-        ComposedTextSearchService.findSentencesWithLongestWord(test);
-        logger.info(composedTextSortingService.sortComposedText(test, CompareType.BY_SENTENCE_COUNT));
-
+        composedTextSearchService.findLongestWord(test);
+        composedTextSearchService.findSentencesWithLongestWord(test);
+        composedTextSortingService.sortComposedText(test, CompareType.BY_SENTENCE_COUNT);
+        composedTextSearchService.removeSentences(test,4);
+        logger.info(test);
     }
 }
