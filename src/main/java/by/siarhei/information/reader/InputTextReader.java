@@ -12,17 +12,17 @@ public class InputTextReader {
     private static final String DEFAULT_INPUT_FILE = "input/input.txt";
     private static final Logger logger = LogManager.getLogger();
 
-    public String readData()  {
+    public String readData() {
         logger.info("The input was obtained from the default source");
         return readData(DEFAULT_INPUT_FILE);
     }
 
-    public String readData(String fileFolder)  {
+    public String readData(String fileFolder) {
         Path path = Paths.get(fileFolder);
         String content = "";
-        try{
-        content = Files.readString(path);}
-        catch (IOException e){
+        try {
+            content = Files.readString(path);
+        } catch (IOException e) {
             logger.error(String.format("File cannot be opened or does not exists, throws exception: %s", e));
             readData();
         }

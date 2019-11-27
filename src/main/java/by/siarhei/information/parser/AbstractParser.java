@@ -1,4 +1,4 @@
-package by.siarhei.information.parser.api;
+package by.siarhei.information.parser;
 
 import by.siarhei.information.composite.api.TextComponent;
 
@@ -18,6 +18,6 @@ public abstract class AbstractParser {
     }
 
     protected AbstractParser getNextParser() {
-       return nextParser;
+        return nextParser;
     }
 }

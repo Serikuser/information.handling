@@ -3,10 +3,11 @@ package by.siarhei.information.composite.impl;
 import by.siarhei.information.composite.api.TextComponent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ComposedParagraph implements TextComponent {
-    List<TextComponent> sentences = new ArrayList<>();
+    private List<TextComponent> sentences = new ArrayList<>();
 
     @Override
     public int count() {
@@ -16,6 +17,11 @@ public class ComposedParagraph implements TextComponent {
     @Override
     public boolean addChild(TextComponent component) {
         return sentences.add(component);
+    }
+
+    @Override
+    public List<TextComponent> getUnmodifiedComponentList() {
+        return Collections.unmodifiableList(sentences);
     }
 
     @Override
