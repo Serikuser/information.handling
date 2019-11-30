@@ -1,6 +1,6 @@
 package by.siarhei.information.parser;
 
-import by.siarhei.information.composite.api.TextComponent;
+import by.siarhei.information.composite.TextComponent;
 
 
 public abstract class AbstractParser {
@@ -9,7 +9,7 @@ public abstract class AbstractParser {
     public abstract void fillComponent(TextComponent textComponent, String text);
 
     protected boolean hasNext() {
-        return !(this.nextParser == null);
+        return this.nextParser != null;
 
     }
 

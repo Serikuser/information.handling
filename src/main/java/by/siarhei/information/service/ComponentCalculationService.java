@@ -1,6 +1,6 @@
 package by.siarhei.information.service;
 
-import by.siarhei.information.composite.api.TextComponent;
+import by.siarhei.information.composite.TextComponent;
 
 import java.util.List;
 

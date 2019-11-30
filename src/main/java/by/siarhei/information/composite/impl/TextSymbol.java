@@ -1,12 +1,18 @@
 package by.siarhei.information.composite.impl;
 
-import by.siarhei.information.composite.api.TextComponent;
+import by.siarhei.information.composite.ComponentType;
+import by.siarhei.information.composite.TextComponent;
 
 import java.util.List;
 
 public class TextSymbol implements TextComponent {
 
     private char symbol;
+    private ComponentType type;
+
+    public TextSymbol() {
+        this.type = ComponentType.SYMBOL;
+    }
 
     @Override
     public String toString() {
@@ -39,6 +45,11 @@ public class TextSymbol implements TextComponent {
     @Override
     public List<TextComponent> getChildrenList() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public ComponentType getComponentType() {
+        return this.type;
     }
 
     @Override

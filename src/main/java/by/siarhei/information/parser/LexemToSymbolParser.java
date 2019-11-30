@@ -1,11 +1,11 @@
 package by.siarhei.information.parser;
 
-import by.siarhei.information.composite.api.TextComponent;
+import by.siarhei.information.composite.TextComponent;
 import by.siarhei.information.composite.impl.TextSymbol;
 
 import java.util.Arrays;
 
-public class TokenToSymbolParser extends AbstractParser {
+public class LexemToSymbolParser extends AbstractParser {
     private static final String REGEX_SYMBOL = "";
 
     @Override

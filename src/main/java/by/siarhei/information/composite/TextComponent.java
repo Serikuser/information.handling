@@ -1,4 +1,4 @@
-package by.siarhei.information.composite.api;
+package by.siarhei.information.composite;
 
 import java.util.List;
 
@@ -12,4 +12,6 @@ public interface TextComponent {
     void removeChild(TextComponent component);
 
     List<TextComponent> getChildrenList();
+
+    ComponentType getComponentType();
 }

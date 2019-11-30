@@ -1,9 +1,8 @@
 package by.siarhei.information.service;
 
-import by.siarhei.information.composite.api.TextComponent;
-import by.siarhei.information.composite.impl.ComposedSentence;
-import by.siarhei.information.composite.impl.ComposedText;
-import by.siarhei.information.composite.impl.ComposedToken;
+import by.siarhei.information.composite.ComponentType;
+import by.siarhei.information.composite.TextComponent;
+import by.siarhei.information.composite.impl.TextComposite;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,16 +11,16 @@ import java.util.*;
 public class ComposedTextSearchService {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String REGEX_NON_LETTERS = "[^a-zA-Z]";
+    private static final String REGEX_NON_LETTERS = "[^a-zA-Z-]";
 
-    public TextComponent findLongestWord(ComposedText text) {
-        TextComponent longestWord = new ComposedToken();
+    public TextComponent findLongestWord(TextComponent text) {
+        TextComponent longestWord = new TextComposite(ComponentType.LEXEM);
         for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
             for (TextComponent sentence : paragraph.getUnmodifiedComponentList()) {
-                for (TextComponent token : sentence.getUnmodifiedComponentList()) {
-                    if (removeNonLetters(token).length()
+                for (TextComponent lexem : sentence.getUnmodifiedComponentList()) {
+                    if (removeNonLetters(lexem).length()
                             > removeNonLetters(longestWord).length()) {
-                        longestWord = token;
+                        longestWord = lexem;
 
                     }
                 }
@@ -35,13 +34,13 @@ public class ComposedTextSearchService {
         return textComponent.toString().replaceAll(REGEX_NON_LETTERS, "");
     }
 
-    public List<TextComponent> findSentencesWithLongestWord(ComposedText text) {
-        int longestWordLettersCount = findLongestWord(text).toString().length();
-        List<TextComponent> sentences = new ArrayList<>();
+    public Set<TextComponent> findSentencesWithLongestWord(TextComponent text) {
+        int longestWordLettersCount = removeNonLetters(findLongestWord(text)).length();
+        Set<TextComponent> sentences = new HashSet<>();
         for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
             for (TextComponent sentence : paragraph.getUnmodifiedComponentList()) {
-                for (TextComponent token : sentence.getUnmodifiedComponentList()) {
-                    if (removeNonLetters(token).length() == longestWordLettersCount) {
+                for (TextComponent lexem : sentence.getUnmodifiedComponentList()) {
+                    if (removeNonLetters(lexem).length() == longestWordLettersCount) {
                         sentences.add(sentence);
                     }
                 }
@@ -51,12 +50,12 @@ public class ComposedTextSearchService {
         return sentences;
     }
 
-    public void removeSentences(ComposedText text, int count) {
+    public void removeSentences(TextComponent text, int count) {
         for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
 
             Iterator iterator = paragraph.getChildrenList().iterator();
             while (iterator.hasNext()) {
-                TextComponent sentence = (ComposedSentence) iterator.next();
+                TextComponent sentence = (TextComposite) iterator.next();
                 if (ComponentCalculationService.componentsCounter(sentence) <= count) {
                     iterator.remove();
                 }
@@ -68,13 +67,13 @@ public class ComposedTextSearchService {
         Map<String, Integer> matches = new HashMap<>();
         for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
             for (TextComponent sentence : paragraph.getUnmodifiedComponentList()) {
-                for (TextComponent token : sentence.getUnmodifiedComponentList()) {
-                    if (!removeNonLetters(token).isBlank()) {
-                        if (matches.containsKey(removeNonLetters(token).toLowerCase())) {
-                            int count = matches.get(removeNonLetters(token).toLowerCase());
-                            matches.put(removeNonLetters(token).toLowerCase(), count + 1);
+                for (TextComponent lexem : sentence.getUnmodifiedComponentList()) {
+                    if (!removeNonLetters(lexem).isBlank()) {
+                        if (matches.containsKey(removeNonLetters(lexem).toLowerCase())) {
+                            int count = matches.get(removeNonLetters(lexem).toLowerCase());
+                            matches.put(removeNonLetters(lexem).toLowerCase(), count + 1);
                         } else {
-                            matches.put(removeNonLetters(token).toLowerCase(), 1);
+                            matches.put(removeNonLetters(lexem).toLowerCase(), 1);
                         }
                     }
                 }
