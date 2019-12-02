@@ -1,63 +1,108 @@
 package by.siarhei.information.interpreter;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Deque;
+import java.util.LinkedList;
 
 public class Client {
+
+    private static final String BIT_OR = "|";
+    private static final String BIT_AND = "&";
+    private static final String BIT_XOR = "^";
+    private static final String BIT_NOT = "~";
+    private static final String BIT_RIGHT_SHIFT = ">";
+    private static final String BIT_LEFT_SHIFT = "<";
+    private static final String BORDER_OPEN = "(";
+    private static final String BORDER_CLOSE = ")";
+
     private ArrayList<AbstractMathExpression> listExpression;
 
     public Client(String expression) {
         listExpression = new ArrayList<>();
-        parse(expression);
+        parseToExpressions(expression);
     }
-    //5|(1&2&(3|(4&(1^5|6&47)|3)|(~89&4|(42&7)))|1)
 
-    private void parse(String expression) {
-        int depth = 0;
+    private void parseToExpressions(String expression) {
+        int count = 0;
+        StringBuilder digit = new StringBuilder();
+        boolean isPreviousSymbolShift = false;
+        Deque<AbstractMathExpression> list = new LinkedList<>();
+        AbstractMathExpression temp;
         for (String symbol : expression.split("")) {
+            count++;
             if (symbol.isEmpty()) {
                 continue;
             }
             switch (symbol) {
-                case "|":
-                    listExpression.add(new TerminalExpressionBitOR(depth));
+                case BIT_OR:
+                    pushDigit(digit);
+                    list.push(new TerminalExpressionBitOR());
                     break;
-                case "&":
-                    listExpression.add(new TerminalExpressionBitAND(depth));
+                case BIT_AND:
+                    pushDigit(digit);
+                    list.push(new TerminalExpressionBitAND());
                     break;
-                case "^":
-                    listExpression.add(new TerminalExpressionBitXOR(depth));
+                case BIT_XOR:
+                    pushDigit(digit);
+                    list.push(new TerminalExpressionBitXOR());
                     break;
-                case "~":
-                    listExpression.add(new TerminalExpressionBitNOT(depth));
+                case BIT_NOT:
+                    pushDigit(digit);
+                    list.push(new TerminalExpressionBitNOT());
                     break;
-                case "(":
-                    //change priority
-                    depth++;
+                case BIT_RIGHT_SHIFT:
+                    if (isPreviousSymbolShift) {
+                        list.push(new TerminalExpressionBitRightShift());
+                        isPreviousSymbolShift = false;
+                    } else {
+                        isPreviousSymbolShift = true;
+                    }
+                    pushDigit(digit);
                     break;
-                case ")":
-                    //change priority
-                    depth--;
+                case BIT_LEFT_SHIFT:
+                    if (isPreviousSymbolShift) {
+                        list.push(new TerminalExpressionBitLeftShift());
+                        isPreviousSymbolShift = false;
+                    } else {
+                        isPreviousSymbolShift = true;
+                    }
+                    pushDigit(digit);
+                    isPreviousSymbolShift = true;
+                    break;
+                case BORDER_OPEN:
+                    pushDigit(digit);
+                    list.push(new NonTerminalExpressionBorderOpen());
+                    break;
+                case BORDER_CLOSE:
+                    pushDigit(digit);
+                    while (!(temp = list.pop()).getType().equals(ExpressionType.BORDER_OPEN)) {
+                        listExpression.add(temp);
+                    }
                     break;
                 default:
-                    listExpression.add(
-                            new NonTerminalExpressionNumber(Integer.valueOf(symbol),depth));
-
+                    digit.append(symbol);
+                    if (count == expression.length()) {
+                        pushDigit(digit);
+                    }
             }
         }
+        listExpression.addAll(list);
     }
 
-    public Number calculate() {
+    private void pushDigit(StringBuilder digit) {
+        if (digit.toString().length() > 0) {
+            listExpression.add(
+                    new NonTerminalExpressionNumber(Integer.valueOf(digit.toString())));
+            digit.delete(0, digit.toString().length());
+        }
+    }
+
+    public Integer calculate() {
         Context context = new Context();
-        for (AbstractMathExpression terminal : listExpression) {
-            terminal.interpret(context);
+        for (AbstractMathExpression expression : listExpression) {
+            expression.interpret(context);
         }
         return context.popValue();
-    }
-
-    public void sortExpressionByPriority(List<AbstractMathExpression> list) {
-        list.sort((o1, o2)
-                -> o2.getPriority() - o1.getPriority());
     }
 }
 

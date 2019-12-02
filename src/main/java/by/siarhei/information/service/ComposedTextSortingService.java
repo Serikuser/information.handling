@@ -1,7 +1,6 @@
 package by.siarhei.information.service;
 
 import by.siarhei.information.composite.TextComponent;
-import by.siarhei.information.interpreter.AbstractMathExpression;
 
 public class ComposedTextSortingService {
 

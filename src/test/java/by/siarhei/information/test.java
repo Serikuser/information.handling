@@ -17,6 +17,8 @@ import org.testng.annotations.Test;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class test {
     private static final Logger logger = LogManager.getLogger();
@@ -67,5 +69,13 @@ public class test {
         String token2 = "43&11".replaceAll("\\d"," ");
         logger.info(token);
         logger.info(token2);
+    }
+    @Test
+    public void asd(){
+        List<Integer> test = new ArrayList<>();
+        test.add(1);
+        test.add(2);
+        test.add(1,2);
+        logger.info(test);
     }
 }

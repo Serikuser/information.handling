@@ -1,16 +1,20 @@
 package by.siarhei.information.interpreter;
 
 public abstract class AbstractMathExpression {
-    private int priority;
 
+    private ExpressionType type;
+
+    @Override
+    public String toString() {
+        return type.name();
+    }
     public abstract void interpret(Context context);
 
-    public void setPriority(int priority){
-        this.priority = priority;
+    public ExpressionType getType() {
+        return type;
     }
 
-    public int getPriority(){
-        return this.priority;
+    public void setType(ExpressionType type) {
+        this.type = type;
     }
-
 }

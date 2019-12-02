@@ -2,8 +2,8 @@ package by.siarhei.information.interpreter;
 
 public class TerminalExpressionBitOR extends AbstractMathExpression {
 
-    TerminalExpressionBitOR(int priority){
-        setPriority(priority);
+    TerminalExpressionBitOR(){
+        setType(ExpressionType.BIT_OR);
     }
     @Override
     public void interpret(Context context) {
