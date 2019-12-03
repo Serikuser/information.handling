@@ -12,6 +12,7 @@ public class NonTerminalExpressionNumber extends AbstractMathExpression {
     public void interpret(Context context) {
         context.pushValue(number);
     }
+
     @Override
     public String toString() {
         return String.valueOf(number);

@@ -8,12 +8,12 @@ import java.util.Arrays;
 
 public class SentenceToLexemParser extends AbstractParser {
 
-    private static final String REGEX_lexem = " ";
+    private static final String REGEX_LEXEM = " ";
 
 
     @Override
     public void fillComponent(TextComponent textComponent, String text) {
-        String[] subLines = text.split(REGEX_lexem);
+        String[] subLines = text.split(REGEX_LEXEM);
         Arrays.stream(subLines).forEachOrdered(subLine -> {
             TextComponent component = new TextComposite(ComponentType.LEXEM);
             if (hasNext()) {

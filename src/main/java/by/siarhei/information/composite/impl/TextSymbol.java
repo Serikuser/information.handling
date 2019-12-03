@@ -23,8 +23,8 @@ public class TextSymbol implements TextComponent {
         return symbol;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol.charAt(0);
+    public void setSymbol(char symbol) {
+        this.symbol = symbol;
     }
 
     @Override

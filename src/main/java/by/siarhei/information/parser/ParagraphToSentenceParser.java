@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class ParagraphToSentenceParser extends AbstractParser {
 
-    private static final String REGEX_SENTENCE = "(?<=[a-z][.!?])\\s+";
+    private static final String REGEX_SENTENCE = "(?<=[a-zA-Z0-9а-яА-Я][.!?])\\s+";
 
 
     @Override

@@ -11,15 +11,15 @@ import java.util.*;
 public class ComposedTextSearchService {
     private static final Logger logger = LogManager.getLogger();
 
-    private static final String REGEX_NON_LETTERS = "[^a-zA-Z-]";
+    private static final String REGEX_NON_WORDS = "[^0-9a-zA-Zа-яА-Я-]";
 
     public TextComponent findLongestWord(TextComponent text) {
         TextComponent longestWord = new TextComposite(ComponentType.LEXEM);
         for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
             for (TextComponent sentence : paragraph.getUnmodifiedComponentList()) {
                 for (TextComponent lexem : sentence.getUnmodifiedComponentList()) {
-                    if (removeNonLetters(lexem).length()
-                            > removeNonLetters(longestWord).length()) {
+                    if (removeNonWordsParts(lexem).length()
+                            > removeNonWordsParts(longestWord).length()) {
                         longestWord = lexem;
 
                     }
@@ -30,17 +30,17 @@ public class ComposedTextSearchService {
         return longestWord;
     }
 
-    private String removeNonLetters(TextComponent textComponent) {
-        return textComponent.toString().replaceAll(REGEX_NON_LETTERS, "");
+    private String removeNonWordsParts(TextComponent textComponent) {
+        return textComponent.toString().replaceAll(REGEX_NON_WORDS, "");
     }
 
     public Set<TextComponent> findSentencesWithLongestWord(TextComponent text) {
-        int longestWordLettersCount = removeNonLetters(findLongestWord(text)).length();
+        int longestWordLettersCount = removeNonWordsParts(findLongestWord(text)).length();
         Set<TextComponent> sentences = new HashSet<>();
         for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
             for (TextComponent sentence : paragraph.getUnmodifiedComponentList()) {
                 for (TextComponent lexem : sentence.getUnmodifiedComponentList()) {
-                    if (removeNonLetters(lexem).length() == longestWordLettersCount) {
+                    if (removeNonWordsParts(lexem).length() == longestWordLettersCount) {
                         sentences.add(sentence);
                     }
                 }
@@ -52,7 +52,6 @@ public class ComposedTextSearchService {
 
     public void removeSentences(TextComponent text, int count) {
         for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
-
             Iterator iterator = paragraph.getChildrenList().iterator();
             while (iterator.hasNext()) {
                 TextComponent sentence = (TextComposite) iterator.next();
@@ -68,12 +67,12 @@ public class ComposedTextSearchService {
         for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
             for (TextComponent sentence : paragraph.getUnmodifiedComponentList()) {
                 for (TextComponent lexem : sentence.getUnmodifiedComponentList()) {
-                    if (!removeNonLetters(lexem).isBlank()) {
-                        if (matches.containsKey(removeNonLetters(lexem).toLowerCase())) {
-                            int count = matches.get(removeNonLetters(lexem).toLowerCase());
-                            matches.put(removeNonLetters(lexem).toLowerCase(), count + 1);
+                    if (!removeNonWordsParts(lexem).isBlank()) {
+                        if (matches.containsKey(removeNonWordsParts(lexem).toLowerCase())) {
+                            int count = matches.get(removeNonWordsParts(lexem).toLowerCase());
+                            matches.put(removeNonWordsParts(lexem).toLowerCase(), count + 1);
                         } else {
-                            matches.put(removeNonLetters(lexem).toLowerCase(), 1);
+                            matches.put(removeNonWordsParts(lexem).toLowerCase(), 1);
                         }
                     }
                 }
@@ -82,3 +81,4 @@ public class ComposedTextSearchService {
         return matches;
     }
 }
+

@@ -10,7 +10,6 @@ public abstract class AbstractParser {
 
     protected boolean hasNext() {
         return this.nextParser != null;
-
     }
 
     public void setNextParser(AbstractParser parser) {
@@ -19,5 +18,9 @@ public abstract class AbstractParser {
 
     protected AbstractParser getNextParser() {
         return nextParser;
+    }
+
+    public void removeNextParser() {
+        nextParser = null;
     }
 }

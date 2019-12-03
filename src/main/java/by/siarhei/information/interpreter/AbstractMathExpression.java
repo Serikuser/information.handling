@@ -8,6 +8,7 @@ public abstract class AbstractMathExpression {
     public String toString() {
         return type.name();
     }
+
     public abstract void interpret(Context context);
 
     public ExpressionType getType() {

@@ -2,11 +2,14 @@ package by.siarhei.information.interpreter;
 
 public class TerminalExpressionBitLeftShift extends AbstractMathExpression {
 
-    TerminalExpressionBitLeftShift(){
+    TerminalExpressionBitLeftShift() {
         setType(ExpressionType.BIT_LEFT_SHIFT);
     }
+
     @Override
     public void interpret(Context context) {
-        context.pushValue(context.popValue() << context.popValue());
+        int second = context.popValue();
+        int first = context.popValue();
+        context.pushValue(first << second);
     }
 }

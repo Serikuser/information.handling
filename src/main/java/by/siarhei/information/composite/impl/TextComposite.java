@@ -55,7 +55,7 @@ public class TextComposite implements TextComponent {
         for (TextComponent children : childrenList) {
             if (children.getComponentType().equals(ComponentType.PARAGRAPH)) {
                 if (children != childrenList.get(FIRST_PARAGRAPH_INDEX) && text.length() != 0) {
-                    text.append("\n");
+                    text.append("\r\n");
                     text.append(PARAGRAPH_TAB);
                 } else {
                     text.append(PARAGRAPH_TAB);
