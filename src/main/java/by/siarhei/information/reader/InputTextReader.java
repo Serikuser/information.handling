@@ -20,12 +20,10 @@ public class InputTextReader {
 
     public String readData(String fileFolder) throws InvalidInputFilePathException {
         Path path = Paths.get(fileFolder);
-        String content = "";
         try {
-            content = Files.readString(path);
+            return Files.readString(path);
         } catch (IOException e) {
             throw new InvalidInputFilePathException("File cannot be opened or does not exists", e);
         }
-        return content;
     }
 }
