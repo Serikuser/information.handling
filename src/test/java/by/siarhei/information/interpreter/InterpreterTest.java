@@ -1,42 +1,27 @@
 package by.siarhei.information.interpreter;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class InterpreterTest {
-    private Client interpreter;
-    private String expression;
 
-    @BeforeClass
-    private void setUp() {
-        expression = "5|(1&2&(3|(4&(1^5|6&47)|3)|(~89&4|(42&7)))|1)";
-        interpreter = new Client(expression);
-    }
-
-    @AfterClass
-    private void setDown() {
-        expression = null;
-        interpreter = null;
-    }
-
-    @Test
-    private void bitExpressionInterpretationTestPositive() {
-        int expected = 5 | (1 & 2 & (3 | (4 & (1 ^ 5 | 6 & 47) | 3) | (~89 & 4 | (42 & 7))) | 1);
-        int actual = Integer.valueOf(interpreter.calculate());
+    @Test(dataProvider = "getExpressions")
+    public void bitExpressionInterpretationTest(String expression, int expected) {
+        Client interpreter = new Client(expression);
+        int actual = Integer.parseInt(interpreter.calculate());
         Assert.assertEquals(actual, expected);
     }
 
-    @Test
-    private void bitExpressionInterpretationTestNegative() {
-        int expected = (1 & 2 & (3 | (4 & (1 ^ 5 | 6 & 47) | 3)) | 1);
-        int actual = Integer.valueOf(interpreter.calculate());
-        Assert.assertNotEquals(actual, expected);
-    }
-
-    @Test(expectedExceptions = NumberFormatException.class)
-    private void bitExpressionWithInvalidExpressionInterpretationTestNegative() {
-        interpreter = new Client("asd");
+    @DataProvider
+    public Object[][] getExpressions() {
+        return new Object[][]{
+                {"5|(1&2&(3|(4&(1^5|6&47)|3)|(~89&4|(42&7)))|1)", 5},
+                {"13<<2", 52},
+                {"3>>5", 0},
+                {"~6&9|(3&4)", 9},
+                {"(7^5|1&2<<(2|5>>2&71))|1200", 1202},
+                {"(~71&(2&3|(3|(2&1>>2|2)&2)|10&2))|78", 78}
+        };
     }
 }

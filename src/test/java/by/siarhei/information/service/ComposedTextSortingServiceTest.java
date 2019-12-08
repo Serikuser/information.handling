@@ -25,7 +25,7 @@ public class ComposedTextSortingServiceTest {
     private ComposedTextSortingService composedTextSortingService;
 
     @BeforeClass
-    private void setUp() {
+    public void setUp() {
         inputText = "   Paragraph1. Sentence2.\r\n" +
                 "   Paragraph2. Sentence2. Sentence3?\r\n" +
                 "   Paragraph3. Sentence2. Sentence3? Sentence3!";
@@ -42,7 +42,7 @@ public class ComposedTextSortingServiceTest {
     }
 
     @AfterClass
-    private void setDown() {
+    public void setDown() {
         inputText = null;
         inputTextToParagraphParser = null;
         paragraphToSentenceParser = null;
@@ -52,7 +52,7 @@ public class ComposedTextSortingServiceTest {
     }
 
     @Test
-    private void sortTextTest() {
+    public void sortTextTest() {
         composedTextSortingService.sortComposedTextByParagraph(composedText);
         String actual = composedText.toString();
         Assert.assertEquals(actual, SORTED_TEXT);

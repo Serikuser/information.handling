@@ -12,7 +12,7 @@ public class InputTextReaderTest {
     private InputTextReader reader;
 
     @BeforeClass
-    private void setUp() {
+    public void setUp() {
         reader = new InputTextReader();
         expectedText = "   It has survived - not only (five) centuries, but also the leap into 13<<2 electronic\r\n" +
                 " typesetting, remaining 3>>5 essentially ~6&9|(3&4) unchanged. It was popularised in\r\n" +
@@ -30,25 +30,25 @@ public class InputTextReaderTest {
     }
 
     @AfterClass
-    private void setDown() {
+    public void setDown() {
         reader = null;
         expectedText = null;
     }
 
     @Test
-    private void readFileFromPathTest() throws InvalidInputFilePathException {
+    public void readFileFromPathTest() throws InvalidInputFilePathException {
         String actualText = reader.readData("input/input.txt");
         Assert.assertEquals(actualText, expectedText);
     }
 
     @Test
-    private void readFileFromDefaultPathTest() throws InvalidInputFilePathException {
+    public void readFileFromDefaultPathTest() throws InvalidInputFilePathException {
         String actualText = reader.readData();
         Assert.assertEquals(actualText, expectedText);
     }
 
     @Test(expectedExceptions = InvalidInputFilePathException.class)
-    private void readFileFromWrongPathTest() throws InvalidInputFilePathException {
+    public void readFileFromWrongPathTest() throws InvalidInputFilePathException {
         String actualText = reader.readData("wrong path");
     }
 }

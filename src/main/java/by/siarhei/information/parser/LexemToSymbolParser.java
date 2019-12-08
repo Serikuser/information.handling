@@ -16,11 +16,11 @@ public class LexemToSymbolParser extends AbstractParser {
             Client interpreter = new Client(text);
             String calculatedExpression = interpreter.calculate();
             char[] charExp = calculatedExpression.toCharArray();
-            for (char sybmol : charExp) {
+            for (char symbol : charExp) {
                 TextSymbol component = new TextSymbol();
-                component.setSymbol(sybmol);
+                component.setSymbol(symbol);
                 if (hasNext()) {
-                    getNextParser().fillComponent(component, String.valueOf(sybmol));
+                    getNextParser().fillComponent(component, String.valueOf(symbol));
                 }
                 textComponent.addChild(component);
             }

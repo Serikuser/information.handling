@@ -4,13 +4,12 @@ import by.siarhei.information.composite.TextComponent;
 
 
 public abstract class AbstractParser {
-    private AbstractParser nextParser;
+
+    public void removeNextParser() {
+        nextParser = null;
+    }
 
     public abstract void fillComponent(TextComponent textComponent, String text);
-
-    protected boolean hasNext() {
-        return this.nextParser != null;
-    }
 
     public void setNextParser(AbstractParser parser) {
         nextParser = parser;
@@ -20,7 +19,10 @@ public abstract class AbstractParser {
         return nextParser;
     }
 
-    public void removeNextParser() {
-        nextParser = null;
+    protected boolean hasNext() {
+        return this.nextParser != null;
     }
+
+    private AbstractParser nextParser;
+
 }

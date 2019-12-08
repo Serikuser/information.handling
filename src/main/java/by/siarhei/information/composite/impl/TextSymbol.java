@@ -33,11 +33,6 @@ public class TextSymbol implements TextComponent {
     }
 
     @Override
-    public List<TextComponent> getUnmodifiedComponentList() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void removeChild(TextComponent component) {
         throw new UnsupportedOperationException();
     }

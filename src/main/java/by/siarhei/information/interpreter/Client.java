@@ -15,78 +15,31 @@ public class Client {
     private static final String BORDER_CLOSE = ")";
 
     private Deque<AbstractMathExpression> listExpression;
-
-    private boolean isPreviousSymbolBitNot = false;
-    private boolean isPreviousSymbolShift = false;
+    private boolean isPreviousSymbolBitNot;
+    private boolean isPreviousSymbolShift;
+    private StringBuilder digit;
+    private Deque<AbstractMathExpression> stack;
+    private int length;
 
     public Client(String expression) {
+        length = expression.length();
+        stack = new LinkedList<>();
+        digit = new StringBuilder();
+        isPreviousSymbolBitNot = false;
+        isPreviousSymbolShift = false;
         listExpression = new LinkedList<>();
         parseToExpressions(expression);
     }
 
     private void parseToExpressions(String expression) {
         int count = 0;
-        StringBuilder digit = new StringBuilder();
-        Deque<AbstractMathExpression> stack = new LinkedList<>();
-        AbstractMathExpression temp;
-        for (String symbol : expression.split("")) {
+        String[] symbols = expression.split("");
+        for (String symbol : symbols) {
             count++;
             if (symbol.isEmpty()) {
                 continue;
             }
-            switch (symbol) {
-                case BIT_OR:
-                    pushDigit(digit);
-                    stack.push(new TerminalExpressionBitOR());
-                    break;
-                case BIT_AND:
-                    pushDigit(digit);
-                    stack.push(new TerminalExpressionBitAND());
-                    break;
-                case BIT_XOR:
-                    pushDigit(digit);
-                    stack.push(new TerminalExpressionBitXOR());
-                    break;
-                case BIT_NOT:
-                    pushDigit(digit);
-                    listExpression.add(new TerminalExpressionBitNOT());
-                    isPreviousSymbolBitNot = true;
-                    break;
-                case BIT_RIGHT_SHIFT:
-                    if (isPreviousSymbolShift) {
-                        stack.push(new TerminalExpressionBitRightShift());
-                        isPreviousSymbolShift = false;
-                    } else {
-                        isPreviousSymbolShift = true;
-                    }
-                    pushDigit(digit);
-                    break;
-                case BIT_LEFT_SHIFT:
-                    if (isPreviousSymbolShift) {
-                        stack.push(new TerminalExpressionBitLeftShift());
-                        isPreviousSymbolShift = false;
-                    } else {
-                        isPreviousSymbolShift = true;
-                    }
-                    pushDigit(digit);
-                    isPreviousSymbolShift = true;
-                    break;
-                case BORDER_OPEN:
-                    pushDigit(digit);
-                    stack.push(new NonTerminalExpressionBorderOpen());
-                    break;
-                case BORDER_CLOSE:
-                    pushDigit(digit);
-                    while (!(temp = stack.pop()).getType().equals(ExpressionType.BORDER_OPEN)) {
-                        listExpression.add(temp);
-                    }
-                    break;
-                default:
-                    digit.append(symbol);
-                    if (count == expression.length()) {
-                        pushDigit(digit);
-                    }
-            }
+            processSymbol(symbol, count);
         }
         listExpression.addAll(stack);
     }
@@ -94,11 +47,7 @@ public class Client {
     private void pushDigit(StringBuilder digit) {
         if (digit.toString().length() > 0) {
             if (isPreviousSymbolBitNot) {
-                AbstractMathExpression temp = listExpression.getLast();
-                listExpression.removeLast();
-                addNumberExpression(digit);
-                listExpression.add(temp);
-                isPreviousSymbolBitNot = false;
+                swapNotAndDigit();
             } else {
                 addNumberExpression(digit);
             }
@@ -108,7 +57,6 @@ public class Client {
     public String calculate() {
         Context context = new Context();
         for (AbstractMathExpression expression : listExpression) {
-            System.out.println(context.toString());
             expression.interpret(context);
         }
         return String.valueOf(context.popValue());
@@ -119,5 +67,81 @@ public class Client {
                 new NonTerminalExpressionNumber(Integer.valueOf(digit.toString())));
         digit.delete(0, digit.toString().length());
     }
-}
 
+    private void addRightShiftExpression(Deque<AbstractMathExpression> stack) {
+        if (isPreviousSymbolShift) {
+            stack.push(new TerminalExpressionBitRightShift());
+            isPreviousSymbolShift = false;
+        } else {
+            isPreviousSymbolShift = true;
+        }
+    }
+
+    private void addLeftShiftExpression(Deque<AbstractMathExpression> stack) {
+        if (isPreviousSymbolShift) {
+            stack.push(new TerminalExpressionBitLeftShift());
+            isPreviousSymbolShift = false;
+        } else {
+            isPreviousSymbolShift = true;
+        }
+    }
+
+    private void openBorders(Deque<AbstractMathExpression> stack) {
+        AbstractMathExpression temp;
+        while (!(temp = stack.pop()).getType().equals(ExpressionType.BORDER_OPEN)) {
+            listExpression.add(temp);
+        }
+    }
+
+    private void swapNotAndDigit() {
+        AbstractMathExpression temp = listExpression.getLast();
+        listExpression.removeLast();
+        addNumberExpression(digit);
+        listExpression.add(temp);
+        isPreviousSymbolBitNot = false;
+    }
+
+    private void processSymbol(String symbol, int count) {
+        switch (symbol) {
+            case BIT_OR:
+                pushDigit(digit);
+                stack.push(new TerminalExpressionBitOR());
+                break;
+            case BIT_AND:
+                pushDigit(digit);
+                stack.push(new TerminalExpressionBitAND());
+                break;
+            case BIT_XOR:
+                pushDigit(digit);
+                stack.push(new TerminalExpressionBitXOR());
+                break;
+            case BIT_NOT:
+                pushDigit(digit);
+                listExpression.add(new TerminalExpressionBitNOT());
+                isPreviousSymbolBitNot = true;
+                break;
+            case BIT_RIGHT_SHIFT:
+                addRightShiftExpression(stack);
+                pushDigit(digit);
+                break;
+            case BIT_LEFT_SHIFT:
+                addLeftShiftExpression(stack);
+                pushDigit(digit);
+                isPreviousSymbolShift = true;
+                break;
+            case BORDER_OPEN:
+                pushDigit(digit);
+                stack.push(new NonTerminalExpressionBorderOpen());
+                break;
+            case BORDER_CLOSE:
+                pushDigit(digit);
+                openBorders(stack);
+                break;
+            default:
+                digit.append(symbol);
+                if (count == length) {
+                    pushDigit(digit);
+                }
+        }
+    }
+}

@@ -12,18 +12,16 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.Map;
-
 public class ComposedTextSearchServiceTest {
 
     private static final String LONGEST_WORD = "longestword";
     private static final String SHORTEST_WORD = "sw";
     private static final String SENTENCES_WITH_LONGEST_WORDS =
-            " Sentence2 word1 word2, word3, longestword word4. Sentence2 word1 word2, word3, longestword word4.";
+            " SentEnce2 word1 word2, word3, longestword woRd4. SentenCe2 word1 word2, word3, longestword wOrd4.";
     private static final String SENTENCE_WITH_SHORTEST_WORD = "S w s w.";
     private static final String TEXT_AFTER_REMOVE = "   Sentence2 word1 word2, word3.\r\n" +
-            "   Sentence2 word1 word2, word3, longestword word4. Sentence3 word1 word2?\r\n" +
-            "   Sentence2 word1 word2, word3, longestword word4. Sentence3 word1 word2?";
+            "   SentEnce2 word1 word2, word3, longestword woRd4. Sentence3 wOrd1 worD2?\r\n" +
+            "   SentenCe2 word1 word2, word3, longestword wOrd4. Sentence3 Word1 word2?";
     private static final int MATCH_COUNT = 22;
 
     private String inputText;
@@ -37,10 +35,10 @@ public class ComposedTextSearchServiceTest {
     private ComposedTextSearchService composedTextSearchService;
 
     @BeforeClass
-    private void setUp() {
+    public void setUp() {
         inputText = "   Paragraph1. Sentence2 word1 word2, word3.\r\n" +
-                "   Paragraph2. Sentence2 word1 word2, word3, longestword word4. Sentence3 word1 word2?" +
-                "   Paragraph3. Sentence2 word1 word2, word3, longestword word4. Sentence3 word1 word2?";
+                "   Paragraph2. SentEnce2 word1 word2, word3, longestword woRd4. Sentence3 wOrd1 worD2?" +
+                "   Paragraph3. SentenCe2 word1 word2, word3, longestword wOrd4. Sentence3 Word1 word2?";
         inputTextToParagraphParser = new InputTextToParagraphParser();
         paragraphToSentenceParser = new ParagraphToSentenceParser();
         sentenceTolexemParser = new SentenceToLexemParser();
@@ -56,7 +54,7 @@ public class ComposedTextSearchServiceTest {
     }
 
     @AfterClass
-    private void setDown() {
+    public void setDown() {
         inputText = null;
         inputTextToParagraphParser = null;
         paragraphToSentenceParser = null;
@@ -67,19 +65,19 @@ public class ComposedTextSearchServiceTest {
     }
 
     @Test
-    private void findLongestWordTestPositive() {
+    public void findLongestWordTestPositive() {
         String actual = composedTextSearchService.findLongestWord(composedText).toString();
         Assert.assertEquals(actual, LONGEST_WORD);
     }
 
     @Test
-    private void findLongestWordTestNegative() {
+    public void findLongestWordTestNegative() {
         String actual = composedTextSearchService.findLongestWord(composedText).toString();
         Assert.assertNotEquals(actual, SHORTEST_WORD);
     }
 
     @Test
-    private void findSentencesWithLongestWordTestPositive() {
+    public void findSentencesWithLongestWordTestPositive() {
         StringBuilder actual = new StringBuilder();
         for (TextComponent sentence : composedTextSearchService.findSentencesWithLongestWord(composedText)) {
             actual.append(sentence.toString());
@@ -88,7 +86,7 @@ public class ComposedTextSearchServiceTest {
     }
 
     @Test
-    private void findSentencesWithLongestWordTestNegative() {
+    public void findSentencesWithLongestWordTestNegative() {
         StringBuilder actual = new StringBuilder();
         for (TextComponent sentence : composedTextSearchService.findSentencesWithLongestWord(composedText)) {
             actual.append(sentence.toString());
@@ -97,21 +95,15 @@ public class ComposedTextSearchServiceTest {
     }
 
     @Test
-    private void removeSentencesTest() {
+    public void removeSentencesTest() {
         composedTextSearchService.removeSentences(composedTextToRemoveTest, 2);
         String actual = composedTextToRemoveTest.toString();
         Assert.assertEquals(actual, TEXT_AFTER_REMOVE);
     }
 
     @Test
-    private void findMatchesTest() {
-        Map<String, Integer> matchesMap = composedTextSearchService.wordMatchCount(composedTextToMatchTest);
-        int actual = 0;
-        for (int number : matchesMap.values()) {
-            if (number > 1) {
-                actual += number;
-            }
-        }
+    public void findMatchesTest() {
+        int actual = composedTextSearchService.wordMatchCount(composedTextToMatchTest);
         Assert.assertEquals(actual, MATCH_COUNT);
     }
 }

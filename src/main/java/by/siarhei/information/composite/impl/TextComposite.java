@@ -4,7 +4,6 @@ import by.siarhei.information.composite.ComponentType;
 import by.siarhei.information.composite.TextComponent;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class TextComposite implements TextComponent {
@@ -37,11 +36,6 @@ public class TextComposite implements TextComponent {
     @Override
     public boolean addChild(TextComponent component) {
         return childrenList.add(component);
-    }
-
-    @Override
-    public List<TextComponent> getUnmodifiedComponentList() {
-        return Collections.unmodifiableList(childrenList);
     }
 
     @Override

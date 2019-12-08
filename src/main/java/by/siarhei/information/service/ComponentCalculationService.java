@@ -10,7 +10,7 @@ public class ComponentCalculationService {
 
     public static int componentsCounter(TextComponent text) {
         int counter = 0;
-        for (TextComponent component : text.getUnmodifiedComponentList()) {
+        for (TextComponent component : text.getChildrenList()) {
             counter += component.count();
         }
         return counter;

@@ -29,7 +29,7 @@ public class ComponentCalculationServiceTest {
     private LexemToSymbolParser lexemToSymbolParser;
 
     @BeforeClass
-    private void setUp() {
+    public void setUp() {
         inputText = "   Paragraph1. Sentence2 word1 word2, word3.\r\n" +
                 "   Paragraph2. Sentence 2 word1 word2, word3, word4. Sentence 3 word1 word2?" +
                 "   Paragraph3. Sentence 2 word1 word2, word3, word4. Sentence 3 word1 word2?";
@@ -45,7 +45,7 @@ public class ComponentCalculationServiceTest {
     }
 
     @AfterClass
-    private void setDown() {
+    public void setDown() {
         inputText = null;
         inputTextToParagraphParser = null;
         paragraphToSentenceParser = null;
@@ -55,20 +55,20 @@ public class ComponentCalculationServiceTest {
     }
 
     @Test
-    private void calculateParagraphsTestPositive() {
+    public void calculateParagraphsTestPositive() {
         int actual = ComponentCalculationService.componentsCounter(composedText);
         Assert.assertEquals(actual, ACTUAL_PARAGRAPH_NUMBER);
     }
 
     @Test
-    private void calculateParagraphsTestNegative() {
+    public void calculateParagraphsTestNegative() {
         int actual = ComponentCalculationService.componentsCounter(composedText);
         Assert.assertNotEquals(actual, WRONG_PARAGRAPH_NUMBER);
     }
 
     @Test
-    private void calculateSentencesTestPositive() {
-        List<TextComponent> paragraphs = composedText.getUnmodifiedComponentList();
+    public void calculateSentencesTestPositive() {
+        List<TextComponent> paragraphs = composedText.getChildrenList();
         int actual = 0;
         for (TextComponent paragraph : paragraphs) {
             actual += ComponentCalculationService.componentsCounter(paragraph);
@@ -77,8 +77,8 @@ public class ComponentCalculationServiceTest {
     }
 
     @Test
-    private void calculateSentencesTestNegative() {
-        List<TextComponent> paragraphs = composedText.getUnmodifiedComponentList();
+    public void calculateSentencesTestNegative() {
+        List<TextComponent> paragraphs = composedText.getChildrenList();
         int actual = 0;
         for (TextComponent paragraph : paragraphs) {
             actual += ComponentCalculationService.componentsCounter(paragraph);

@@ -7,8 +7,6 @@ public interface TextComponent {
 
     boolean addChild(TextComponent component);
 
-    List<TextComponent> getUnmodifiedComponentList();
-
     void removeChild(TextComponent component);
 
     List<TextComponent> getChildrenList();

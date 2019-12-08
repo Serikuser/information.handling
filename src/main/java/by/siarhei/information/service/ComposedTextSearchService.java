@@ -15,9 +15,9 @@ public class ComposedTextSearchService {
 
     public TextComponent findLongestWord(TextComponent text) {
         TextComponent longestWord = new TextComposite(ComponentType.LEXEM);
-        for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
-            for (TextComponent sentence : paragraph.getUnmodifiedComponentList()) {
-                for (TextComponent lexem : sentence.getUnmodifiedComponentList()) {
+        for (TextComponent paragraph : text.getChildrenList()) {
+            for (TextComponent sentence : paragraph.getChildrenList()) {
+                for (TextComponent lexem : sentence.getChildrenList()) {
                     if (removeNonWordsParts(lexem).length()
                             > removeNonWordsParts(longestWord).length()) {
                         longestWord = lexem;
@@ -30,16 +30,12 @@ public class ComposedTextSearchService {
         return longestWord;
     }
 
-    private String removeNonWordsParts(TextComponent textComponent) {
-        return textComponent.toString().replaceAll(REGEX_NON_WORDS, "");
-    }
-
-    public Set<TextComponent> findSentencesWithLongestWord(TextComponent text) {
+    public List<TextComponent> findSentencesWithLongestWord(TextComponent text) {
         int longestWordLettersCount = removeNonWordsParts(findLongestWord(text)).length();
-        Set<TextComponent> sentences = new HashSet<>();
-        for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
-            for (TextComponent sentence : paragraph.getUnmodifiedComponentList()) {
-                for (TextComponent lexem : sentence.getUnmodifiedComponentList()) {
+        List<TextComponent> sentences = new LinkedList<>();
+        for (TextComponent paragraph : text.getChildrenList()) {
+            for (TextComponent sentence : paragraph.getChildrenList()) {
+                for (TextComponent lexem : sentence.getChildrenList()) {
                     if (removeNonWordsParts(lexem).length() == longestWordLettersCount) {
                         sentences.add(sentence);
                     }
@@ -51,7 +47,7 @@ public class ComposedTextSearchService {
     }
 
     public void removeSentences(TextComponent text, int count) {
-        for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
+        for (TextComponent paragraph : text.getChildrenList()) {
             Iterator iterator = paragraph.getChildrenList().iterator();
             while (iterator.hasNext()) {
                 TextComponent sentence = (TextComposite) iterator.next();
@@ -62,23 +58,46 @@ public class ComposedTextSearchService {
         }
     }
 
-    public Map<String, Integer> wordMatchCount(TextComponent text) {
-        Map<String, Integer> matches = new HashMap<>();
-        for (TextComponent paragraph : text.getUnmodifiedComponentList()) {
-            for (TextComponent sentence : paragraph.getUnmodifiedComponentList()) {
-                for (TextComponent lexem : sentence.getUnmodifiedComponentList()) {
+    public int wordMatchCount(TextComponent text) {
+        Map<String, Integer> matchesMap = new HashMap<>();
+        for (TextComponent paragraph : text.getChildrenList()) {
+            for (TextComponent sentence : paragraph.getChildrenList()) {
+                for (TextComponent lexem : sentence.getChildrenList()) {
                     if (!removeNonWordsParts(lexem).isBlank()) {
-                        if (matches.containsKey(removeNonWordsParts(lexem).toLowerCase())) {
-                            int count = matches.get(removeNonWordsParts(lexem).toLowerCase());
-                            matches.put(removeNonWordsParts(lexem).toLowerCase(), count + 1);
-                        } else {
-                            matches.put(removeNonWordsParts(lexem).toLowerCase(), 1);
-                        }
+                        putValue(lexem, matchesMap);
                     }
                 }
             }
         }
+        return countMatches(matchesMap);
+    }
+
+    private String removeNonWordsParts(TextComponent textComponent) {
+        return textComponent.toString().replaceAll(REGEX_NON_WORDS, "");
+    }
+
+    private int countMatches(Map<String, Integer> matchesMap) {
+        int matches = 0;
+        for (int number : matchesMap.values()) {
+            if (number > 1) {
+                matches += number;
+            }
+        }
+        logger.info(String.format("Total matches count: %s", matches));
         return matches;
+    }
+
+    private void increaseValue(TextComponent lexem, Map<String, Integer> matchesMap) {
+        int count = matchesMap.get(removeNonWordsParts(lexem).toLowerCase());
+        matchesMap.put(removeNonWordsParts(lexem).toLowerCase(), count + 1);
+    }
+
+    private void putValue(TextComponent lexem, Map<String, Integer> matchesMap) {
+        if (matchesMap.containsKey(removeNonWordsParts(lexem).toLowerCase())) {
+            increaseValue(lexem, matchesMap);
+        } else {
+            matchesMap.put(removeNonWordsParts(lexem).toLowerCase(), 1);
+        }
     }
 }
 
